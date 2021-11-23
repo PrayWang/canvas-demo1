@@ -18,32 +18,66 @@
      //画线
         let ctx = canvas.getContext("2d");
 
+        ctx.fillStyle = "black"; //填颜色
+        ctx.strokeStyle = 'none'; //削毛面
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round' //把折角的空缺补圆
+  
+
         let painting = false
+        let last
 
-        ctx.fillStyle = "black";
-        ctx.strokeStyle = 'none'
-        
-        //鼠标按下开始画线
-        canvas.onmousedown = () => {
+
+        // 检测设备是否支持触屏
+        // var isTouchDevice = 'ontouchstart' in document.documentElement;
+        // console.log(isTouchDevice)
+
+        var isTouchDevice = 'ontouchstart' in document.documentElement;
+        if(isTouchDevice){
+            canvas.ontouchstart = (q) => {
+                let x = q.touches[0].clientX
+                let y = q.touches[0].clientY
+                last = [x,y]
+            }
+            canvas.ontouchmove = (q) => {
+                let x = q.touches[0].clientX
+                let y = q.touches[0].clientY
+                // ctx.beginPath();
+                // ctx.arc(x, y,10, 0,2 * Math.PI);
+                // ctx.stroke();
+                // ctx.fill();
+                drawLine(last[0],last[1],x,y)
+                last = [x,y]
+            }
+        }else{
+             //鼠标按下开始画线
+            canvas.onmousedown = (e) => {
             painting = true
-        }
+            last = [e.clientX,e.clientY]
+            }
 
-        canvas.onmousemove = (e) => {
-           if (painting === true){
-            // ctx.fillRect (e.clientX -5, e.clientY -5, 10, 10); 方形
-            ctx.beginPath();
-            ctx.arc(e.clientX, e.clientY,10, 0,2 * Math.PI);
-            ctx.stroke();
-            ctx.fill();
-            } else {
-                console.log('什么都不做')
+            canvas.onmousemove = (e) => {
+                if (painting === true){
+                    // ctx.beginPath();
+                    // ctx.arc(e.clientX, e.clientY,10, 0,2 * Math.PI);
+                    // ctx.stroke();
+                    // ctx.fill();
+                    drawLine(last[0],last[1],e.clientX,e.clientY)
+                    last = [e.clientX,e.clientY]
+                } 
+            }
+        //鼠标松开停止
+            canvas.onmouseup = () => {
+            painting = false
             }
         }
+        function drawLine(x1,y1,x2,y2){
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        } 
 
-        //鼠标松开停止
-      canvas.onmouseup = () => {
-           painting = false
-      }
    </script>
 </body>
 </html>
