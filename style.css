@@ -5,6 +5,7 @@
 }
 
 #canvas {
-  height: 100vh;
-  border: 1px solid red;
+  /* border: 1px solid red; */
+  display: block;
+  /* canvas的宽高一开始就已经确定，如果强行改的话，它自会现有的基础上拉伸，不会自适应，会导致里面的画质模糊 */
 }
